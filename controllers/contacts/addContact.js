@@ -10,7 +10,6 @@ const addContact = async (name, email, phone) => {
   const contacts = await listContacts()
   contacts.push(newContact)
   await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2))
-  console.log('The contact has been successfully added')
   return newContact
 }
 

@@ -41,11 +41,25 @@ router.post('/', async (req, res, next) => {
   }
 })
 
-router.delete('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template message' })
+router.put('/:contactId', async (req, res, next) => {
+  try {
+    const { error } = contactsSchema.validate(req.body)
+    if (error) {
+      throw new CreateError(404, error.message)
+    }
+    const { contactId } = req.params
+    const { name, email, phone } = req.body
+    const result = await contacts.updateById(contactId, name, email, phone)
+    if (!result) {
+      throw new CreateError(404, 'Not found')
+    }
+    res.json(result)
+  } catch (error) {
+    next(error)
+  }
 })
 
-router.put('/:contactId', async (req, res, next) => {
+router.delete('/:contactId', async (req, res, next) => {
   res.json({ message: 'template message' })
 })
 
