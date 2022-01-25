@@ -45,7 +45,7 @@ router.put('/:contactId', async (req, res, next) => {
   try {
     const { error } = contactsSchema.validate(req.body)
     if (error) {
-      throw new CreateError(404, error.message)
+      throw new CreateError(400, error.message)
     }
     const { contactId } = req.params
     const { name, email, phone } = req.body
@@ -60,7 +60,16 @@ router.put('/:contactId', async (req, res, next) => {
 })
 
 router.delete('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template message' })
+  try {
+    const { contactId } = req.params
+    const result = await contacts.removeContact(contactId)
+    if (!result) {
+      throw new CreateError(404, 'Not found')
+    }
+    res.json({ message: 'Contact deleted' })
+  } catch (error) {
+    next(error)
+  }
 })
 
 module.exports = router
