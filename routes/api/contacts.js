@@ -1,8 +1,9 @@
 const express = require('express')
-const createError = require('http-errors')
+const CreateError = require('http-errors')
 const router = express.Router()
 
 const contacts = require('../../controllers/contacts')
+const contactsSchema = require('../../schemas/contacts')
 
 router.get('/', async (req, res, next) => {
   try {
@@ -18,7 +19,7 @@ router.get('/:contactId', async (req, res, next) => {
     const { contactId } = req.params
     const result = await contacts.getContactById(contactId)
     if (!result) {
-      throw new createError(404, 'Not found')
+      throw new CreateError(404, 'Not found')
     }
     res.json(result)
   } catch (error) {
@@ -27,7 +28,17 @@ router.get('/:contactId', async (req, res, next) => {
 })
 
 router.post('/', async (req, res, next) => {
-  res.json({ message: 'template message' })
+  try {
+    const { error } = contactsSchema.validate(req.body)
+    if (error) {
+      throw new CreateError(400, error.message)
+    }
+    const { name, email, phone } = req.body
+    const result = await contacts.addContact(name, email, phone)
+    res.status(201).json(result)
+  } catch (error) {
+    next(error)
+  }
 })
 
 router.delete('/:contactId', async (req, res, next) => {
