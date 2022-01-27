@@ -2,7 +2,7 @@ const express = require('express')
 const CreateError = require('http-errors')
 const router = express.Router()
 
-const contacts = require('../../controllers/contacts')
+const contacts = require('../../models/contacts')
 const contactsSchema = require('../../schemas/contacts')
 
 router.get('/', async (req, res, next) => {
