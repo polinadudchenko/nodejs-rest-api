@@ -1,16 +1,19 @@
-const fs = require('fs/promises')
-const path = require('path')
-const { v4 } = require('uuid')
-const listContacts = require('./listContacts')
+const CreateError = require('http-errors')
+const contacts = require('../../models/contacts')
+const contactsSchema = require('../../schemas/contacts')
 
-const contactsPath = path.join(__dirname, 'contacts.json')
-
-const addContact = async (name, email, phone) => {
-  const newContact = { id: v4(), name, email, phone }
-  const contacts = await listContacts()
-  contacts.push(newContact)
-  await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2))
-  return newContact
+const addContact = async (req, res, next) => {
+  try {
+    const { error } = contactsSchema.validate(req.body)
+    if (error) {
+      throw new CreateError(400, error.message)
+    }
+    const { name, email, phone } = req.body
+    const result = await contacts.addContact(name, email, phone)
+    res.status(201).json(result)
+  } catch (error) {
+    next(error)
+  }
 }
 
 module.exports = addContact

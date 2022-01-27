@@ -1,21 +1,16 @@
-const fs = require('fs/promises')
-const path = require('path')
-const listContacts = require('./listContacts')
+const CreateError = require('http-errors')
+const contacts = require('../../models/contacts')
 
-const contactsPath = path.join(__dirname, 'contacts.json')
-
-const removeContact = async contactId => {
-  const contacts = await listContacts()
-  const contactIdx = contacts.findIndex(
-    item => item.id === contactId.toString(),
-  )
-  if (contactIdx === -1) {
-    return null
+const removeContact = async (req, res, next) => {
+  try {
+    const { contactId } = req.params
+    const result = await contacts.removeContact(contactId)
+    if (!result) {
+      throw new CreateError(404, 'Not found')
+    }
+    res.json({ message: 'Contact deleted' })
+  } catch (error) {
+    next(error)
   }
-  const contactToDelete = contacts[contactIdx]
-  contacts.splice(contactIdx, 1)
-  await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2))
-  return contactToDelete
 }
-
 module.exports = removeContact

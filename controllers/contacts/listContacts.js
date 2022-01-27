@@ -1,12 +1,12 @@
-const fs = require('fs/promises')
-const path = require('path')
+const contacts = require('../../models/contacts')
 
-const contactsPath = path.join(__dirname, 'contacts.json')
-
-const listContacts = async () => {
-  const data = await fs.readFile(contactsPath)
-  const allContacts = JSON.parse(data)
-  return allContacts
+const listContacts = async (req, res, next) => {
+  try {
+    const result = await contacts.listContacts()
+    res.json(result)
+  } catch (error) {
+    next(error)
+  }
 }
 
 module.exports = listContacts

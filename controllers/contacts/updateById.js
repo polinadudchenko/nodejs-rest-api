@@ -1,18 +1,23 @@
-const fs = require('fs/promises')
-const path = require('path')
-const listContacts = require('./listContacts')
+const CreateError = require('http-errors')
+const contacts = require('../../models/contacts')
+const contactsSchema = require('../../schemas/contacts')
 
-const contactsPath = path.join(__dirname, 'contacts.json')
-
-const updateById = async (id, name, email, phone) => {
-  const contacts = await listContacts()
-  const idx = contacts.findIndex(item => item.id === id)
-  if (idx === -1) {
-    return null
+const updateById = async (req, res, next) => {
+  try {
+    const { error } = contactsSchema.validate(req.body)
+    if (error) {
+      throw new CreateError(400, error.message)
+    }
+    const { contactId } = req.params
+    const { name, email, phone } = req.body
+    const result = await contacts.updateById(contactId, name, email, phone)
+    if (!result) {
+      throw new CreateError(404, 'Not found')
+    }
+    res.json(result)
+  } catch (error) {
+    next(error)
   }
-  contacts[idx] = { id, name, email, phone }
-  await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2))
-  return contacts[idx]
 }
 
 module.exports = updateById
