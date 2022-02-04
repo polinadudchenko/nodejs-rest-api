@@ -1,6 +1,6 @@
 const CreateError = require('http-errors')
-const contacts = require('../../models/contacts')
-const contactsSchema = require('../../schemas/contacts')
+const { Contact } = require('../../models/contacts')
+const contactsSchema = require('../../middlewares/validation/contactValidation')
 
 const updateById = async (req, res, next) => {
   try {
@@ -9,8 +9,7 @@ const updateById = async (req, res, next) => {
       throw new CreateError(400, error.message)
     }
     const { contactId } = req.params
-    const { name, email, phone } = req.body
-    const result = await contacts.updateById(contactId, name, email, phone)
+    const result = await Contact.findByIdAndUpdate(contactId, req.body)
     if (!result) {
       throw new CreateError(404, 'Not found')
     }

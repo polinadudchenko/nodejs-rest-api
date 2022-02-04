@@ -1,6 +1,6 @@
 const CreateError = require('http-errors')
-const contacts = require('../../models/contacts')
-const contactsSchema = require('../../schemas/contacts')
+const { Contact } = require('../../models/contacts')
+const contactsSchema = require('../../middlewares/validation/contactValidation')
 
 const addContact = async (req, res, next) => {
   try {
@@ -8,8 +8,7 @@ const addContact = async (req, res, next) => {
     if (error) {
       throw new CreateError(400, error.message)
     }
-    const { name, email, phone } = req.body
-    const result = await contacts.addContact(name, email, phone)
+    const result = await Contact.create(req.body)
     res.status(201).json(result)
   } catch (error) {
     next(error)
