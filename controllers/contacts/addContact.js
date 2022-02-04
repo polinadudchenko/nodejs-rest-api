@@ -1,10 +1,10 @@
 const CreateError = require('http-errors')
 const { Contact } = require('../../models/contacts')
-const { add } = require('../../middlewares/validation/contactValidation')
+const { contactValidation } = require('../../middlewares/validation')
 
 const addContact = async (req, res, next) => {
   try {
-    const { error } = add.validate(req.body)
+    const { error } = contactValidation.add.validate(req.body)
     if (error) {
       throw new CreateError(400, error.message)
     }
