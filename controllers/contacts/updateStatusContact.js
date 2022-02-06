@@ -2,9 +2,12 @@ const CreateError = require('http-errors')
 const { Contact } = require('../../models/contacts')
 const { contactValidation } = require('../../middlewares/validation')
 
-const updateById = async (req, res, next) => {
+const updateStatusContact = async (req, res, next) => {
   try {
-    const { error } = contactValidation.update.validate(req.body)
+    if (!req.body) {
+      throw new CreateError(400, 'missing field favorite')
+    }
+    const { error } = contactValidation.updateFavorite.validate(req.body)
     if (error) {
       throw new CreateError(400, error.message)
     }
@@ -21,4 +24,4 @@ const updateById = async (req, res, next) => {
   }
 }
 
-module.exports = updateById
+module.exports = updateStatusContact
