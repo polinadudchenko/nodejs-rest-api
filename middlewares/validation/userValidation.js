@@ -8,4 +8,7 @@ const registerJoiSchema = Joi.object({
   password: Joi.string().min(6).required(),
 })
 
-module.exports = registerJoiSchema
+const joiUpdateSubscriptionSchema = Joi.object({
+  subscription: Joi.string().required(),
+})
+module.exports = { registerJoiSchema, joiUpdateSubscriptionSchema }
