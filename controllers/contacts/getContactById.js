@@ -1,6 +1,6 @@
 const CreateError = require('http-errors')
 
-const { Contact } = require('../../models/contacts')
+const { Contact } = require('../../models')
 
 const getContactById = async (req, res, next) => {
   try {
