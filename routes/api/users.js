@@ -1,6 +1,6 @@
 const express = require('express')
 const authenticate = require('../../middlewares/authentication/authenticate')
-const upload = require('../../middlewares/upload/upload')
+const { upload, resize } = require('../../middlewares/upload')
 const userCtrl = require('../../controllers/users')
 
 const router = express.Router()
@@ -12,6 +12,7 @@ router.patch(
   '/avatars',
   authenticate,
   upload.single('avatar'),
+  resize,
   userCtrl.uploadAvatar,
 )
 
