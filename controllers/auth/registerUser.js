@@ -6,7 +6,7 @@ const { userValidation } = require('../../middlewares/validation')
 
 const registerUser = async (req, res, next) => {
   try {
-    const { error } = userValidation.validate(req.body)
+    const { error } = userValidation.registerJoiSchema.validate(req.body)
     if (error) {
       throw new CreateError(400, error.message)
     }
