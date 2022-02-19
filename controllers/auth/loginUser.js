@@ -8,7 +8,7 @@ const { SECRET_KEY } = process.env
 
 const loginUser = async (req, res, next) => {
   try {
-    const { error } = userValidation.validate(req.body)
+    const { error } = userValidation.registerJoiSchema.validate(req.body)
     if (error) {
       throw new CreateError(400, error.message)
     }

@@ -1,11 +1,12 @@
 const CreateError = require('http-errors')
 const bcrypt = require('bcryptjs')
+const gravatar = require('gravatar')
 const { User } = require('../../models')
 const { userValidation } = require('../../middlewares/validation')
 
 const registerUser = async (req, res, next) => {
   try {
-    const { error } = userValidation.validate(req.body)
+    const { error } = userValidation.registerJoiSchema.validate(req.body)
     if (error) {
       throw new CreateError(400, error.message)
     }
@@ -16,7 +17,8 @@ const registerUser = async (req, res, next) => {
     }
     const salt = await bcrypt.genSalt(10)
     const hashPassword = await bcrypt.hash(password, salt)
-    await User.create({ email, password: hashPassword })
+    const avatarURL = gravatar.url(email)
+    await User.create({ email, avatarURL, password: hashPassword })
     res.status(201).json({
       user: {
         email,
