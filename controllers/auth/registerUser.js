@@ -3,6 +3,9 @@ const bcrypt = require('bcryptjs')
 const gravatar = require('gravatar')
 const { User } = require('../../models')
 const { userValidation } = require('../../middlewares/validation')
+const { v4 } = require('uuid')
+
+const { sendMail } = require('../../helpers')
 
 const registerUser = async (req, res, next) => {
   try {
@@ -18,7 +21,19 @@ const registerUser = async (req, res, next) => {
     const salt = await bcrypt.genSalt(10)
     const hashPassword = await bcrypt.hash(password, salt)
     const avatarURL = gravatar.url(email)
-    await User.create({ email, avatarURL, password: hashPassword })
+    const verificationToken = v4()
+    await User.create({
+      email,
+      password: hashPassword,
+      verificationToken,
+      avatarURL,
+    })
+    const mail = {
+      to: email,
+      subject: 'Email verification',
+      html: `<a target="_blank" href='http://localhost:5000/api/users/${verificationToken}'>Click here to verify your email</a>`,
+    }
+    await sendMail(mail)
     res.status(201).json({
       user: {
         email,
