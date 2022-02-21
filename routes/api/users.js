@@ -7,6 +7,7 @@ const router = express.Router()
 
 router.get('/current', authenticate, userCtrl.getCurrent)
 router.get('/logout', authenticate, userCtrl.logoutUser)
+router.get('/verify/:verificationToken', userCtrl.verifyUser)
 router.patch('/', authenticate, userCtrl.updateSubscription)
 router.patch(
   '/avatars',
