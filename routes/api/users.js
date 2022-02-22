@@ -16,5 +16,6 @@ router.patch(
   resize,
   userCtrl.uploadAvatar,
 )
+router.post('/verify', userCtrl.sendVerifyEmail)
 
 module.exports = router

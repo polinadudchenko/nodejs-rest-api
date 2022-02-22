@@ -11,4 +11,13 @@ const registerJoiSchema = Joi.object({
 const joiUpdateSubscriptionSchema = Joi.object({
   subscription: Joi.string().required(),
 })
-module.exports = { registerJoiSchema, joiUpdateSubscriptionSchema }
+
+const joiVerifyEmailSchema = Joi.object({
+  email: Joi.string().pattern(emailRegexp).required(),
+})
+
+module.exports = {
+  registerJoiSchema,
+  joiUpdateSubscriptionSchema,
+  joiVerifyEmailSchema,
+}
