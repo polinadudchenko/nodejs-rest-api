@@ -4,7 +4,7 @@ const CreateError = require('http-errors')
 const verifyUser = async (req, res, next) => {
   try {
     const { verificationToken } = req.params
-    const user = User.findOne({ verificationToken })
+    const user = await User.findOne({ verificationToken })
     if (!user) {
       throw new CreateError(404, 'User not found')
     }
