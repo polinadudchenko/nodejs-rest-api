@@ -5,7 +5,7 @@ const { User } = require('../../models')
 const { userValidation } = require('../../middlewares/validation')
 const { v4 } = require('uuid')
 
-const { sendMail } = require('../../helpers')
+const { sendMail } = require('../../services')
 
 const registerUser = async (req, res, next) => {
   try {
